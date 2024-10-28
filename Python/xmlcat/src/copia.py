@@ -16,4 +16,4 @@ def copyfiles():
             if os.path.getmtime(origem) >= limite_tempo: # verifica a data de modificação do arquivo
                 destino_arquivo = os.path.join(destino, arquivo)
                 shutil.move(origem, destino_arquivo) 
-                #print(f'Copiado: {arquivo}')
+                print(f'Copiado: {arquivo}') # inserir um popup aqui para informação

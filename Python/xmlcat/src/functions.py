@@ -1,5 +1,5 @@
-from numpy import imag
 import pyautogui as pa
+import tkinter as tk
 import os
 import time as t
 import datetime as dt
@@ -10,6 +10,15 @@ ende = r'http://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal'
 daysago = 1 #quantidade de dias atrás para pesquisa
 today = dt.date.today().strftime('%d/%m/%Y')
 day = (dt.date.today() - dt.timedelta(days=daysago)).strftime('%d/%m/%Y')
+
+def show_popup(message):
+    root = tk.Tk()
+    root.title("Aviso")
+    label = tk.Label(root, text=message, padx=20, pady=20)
+    label.pack()
+    button = tk.Button(root, text="OK", command=root.destroy, padx=10, pady=5)
+    button.pack()
+    root.mainloop()
 
 def opensite(site, path): #função para abrir o site de download.
     os.startfile(path)
@@ -25,9 +34,9 @@ def opensite(site, path): #função para abrir o site de download.
 def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     local = pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
     x, y = pa.center(local)
-    pa.click(x, y, duration=0.1)
+    pa.click(x, y, duration=0.3)
 
-def locationimg(img : str): #função que retorna 1 casa haja uma imagem na tela, 0 caso não.
+def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
     try:
         pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
     except:
@@ -62,9 +71,13 @@ def searchdownload(): #função de busca dos xml e downloads
     t.sleep(3)
     pa.click()
     t.sleep(3)
-    clickonimg('baixar2.png')
-    t.sleep(3)
+    if locationimg('semresult.png'):
+        show_popup('Não há xml para essa empresa.')    
+    else:
+        clickonimg('baixar2.png')
+        t.sleep(3)
     #clickonimg('ok.png')
+
 
 def insertdate(): #função para inserção de data no seu respectivo campo.
     pa.click(256, 256, duration=0.3)
@@ -87,6 +100,7 @@ def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
     t.sleep(1)
     pa.click(1341, 14, duration=0.3)
 
+
 def downloadxmlflavia():
     opensite(ende, local)
     verifycertificate('flavia.png')
@@ -104,8 +118,3 @@ def downloadxmlflavia():
     searchdownload()
     t.sleep(1)
     pa.click(1341, 14, duration=0.3)
-
-
-
-
-
