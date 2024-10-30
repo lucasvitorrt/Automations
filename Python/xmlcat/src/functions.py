@@ -75,7 +75,7 @@ def searchdownload(): #função de busca dos xml e downloads
         show_popup('Não há xml para essa empresa.')    
     else:
         clickonimg('baixar2.png')
-        t.sleep(3)
+        t.sleep(6)
     #clickonimg('ok.png')
 
 
@@ -116,5 +116,5 @@ def downloadxmlflavia():
     t.sleep(1)
     insertdate()
     searchdownload()
-    t.sleep(1)
+    t.sleep(2)
     pa.click(1341, 14, duration=0.3)
