@@ -20,16 +20,49 @@ def show_popup(message):
     button.pack()
     root.mainloop()
 
+
+def aguardeimg(img : str, time : int): # espera uma imagem(img) na tela por x(time) tentaivas de 1 seg, caso apareça retorna 1.
+    t.sleep(1)
+    while locationimg(img) != 1:
+        t.sleep(1)
+        time -= 1
+        if time == 0:
+            return 0
+    else:
+        return 1
+
+
+'''def aguardeedge():
+    time = 0
+    t.sleep(1)
+    while locationimg('edgeaberto.png') != 1:
+        t.sleep(5)
+        time += 1
+        if time == '2':
+            return 0
+    else:
+        return 1'''
+
 def opensite(site, path): #função para abrir o site de download.
     os.startfile(path)
-    t.sleep(1)
-    pa.click(872, 42, duration=0.3) #clique na barra de endereços
-    pa.write(site) #insere o site 
-    t.sleep(1)
-    pa.press('ENTER')
-    t.sleep(1)
-    clickonimg('acessocert.png')
-    t.sleep(1)
+    #t.sleep(1)
+    if aguardeimg('edgeaberto.png', 10):
+        pa.click(872, 42, duration=0.3) #clique na barra de endereços
+        pa.write(site) #insere o site 
+        t.sleep(1)
+        pa.press('ENTER')
+        t.sleep(1)
+        if aguardeimg('acessocert.png', 10): #espera a imagem por 10s, se achar clica nela!
+            clickonimg('acessocert.png')
+            t.sleep(1)
+            return 1
+        else:
+            print('Erro ao acessar por certificado digital!')
+            return 0
+        #return 1
+    else:
+        print('Navegador não foi aberto corretamente!')
+        return 0
 
 def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     local = pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
@@ -44,61 +77,119 @@ def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela
     return 1
 
 def verifycertificate(certificate : str): #função que verifica se há um certificado instalado.
-    while True:
-        ex = 0
-        try:
-            clickonimg(certificate)
-        except:
-            ex = 1
-        if ex:
-            if locationimg('finalcerts.png'):
-                print('Certificado não encontrado!!')
-                break
+    if aguardeimg('selecionarumcertificado.png', 10):
+        while True:
+            ex = 0
+            try:
+                clickonimg(certificate)
+            except:
+                ex = 1
+            if ex:
+                if locationimg('finalcerts.png'):
+                    print('Certificado não encontrado!!')
+                    break
+                else:
+                    try:
+                        clickonimg('movdow.png')
+                    except:
+                        pa.click()
+                    ex = 0
             else:
-                try:
-                    clickonimg('movdow.png')
-                except:
-                    pa.click()
-                ex = 0
-        else:
-            t.sleep(0.2)
-            pa.press('ENTER')
-            break
-            
+                t.sleep(0.2)
+                pa.press('ENTER')
+                break
+    else:
+        print('Não foi possivel abrir a janela de seleção de certificado!')   
+   
+def aguarde():
+    time = 0
+    t.sleep(1.5)
+    while locationimg('aguarde.png'):
+        t.sleep(5)
+        time += 1
+        if time == '2':
+            return 0
+    else:
+        return 1
+
+'''def aguardeconclusao():
+    time = 0
+    t.sleep(1.5)
+    while locationimg('concluido.png') != 1:
+        t.sleep(3)
+        time += 1
+        if time == '20':
+            return 0
+    else:
+        return 1'''
 
 def searchdownload(): #função de busca dos xml e downloads
     clickonimg('pesquisar.png')
-    t.sleep(3)
-    pa.click()
-    t.sleep(3)
-    if locationimg('semresult.png'):
-        show_popup('Não há xml para essa empresa.')    
+    if aguarde():
+        pa.click()
+        if aguarde():
+            #t.sleep(2)
+            if locationimg('semresult.png'):
+                print('Não há xml para essa empresa.')    
+            else:
+                clickonimg('baixar2.png')
+                if aguardeimg('concluido.png', 120):
+                    return 1
+                else:
+                    return 0
+            #clickonimg('ok.png')
+        else:
+            print('Aguardou tempo demais!')
+            return 0
     else:
-        clickonimg('baixar2.png')
-        t.sleep(6)
-    #clickonimg('ok.png')
+        print('Aguardou tempo demais!')
+        return 0
 
 
 def insertdate(): #função para inserção de data no seu respectivo campo.
     pa.click(256, 256, duration=0.3)
+    t.sleep(0.5)
     pa.write(day)
-    t.sleep(0.7)
+    t.sleep(0.5)
     pa.press('TAB')
+    t.sleep(0.5)
     pa.write(today)
-    t.sleep(0.7)
+    t.sleep(0.5)
 
 def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
-    opensite(ende, local)
-    verifycertificate('mundonat.png')
-    t.sleep(0.5)
-    pa.click(545, 209, duration=0.3)
-    t.sleep(1)
-    clickonimg('mundonatcnpj.png')
-    t.sleep(1)
-    insertdate()
-    searchdownload()
-    t.sleep(1)
-    pa.click(1341, 14, duration=0.3)
+    if opensite(ende, local):
+        verifycertificate('mundonat.png')
+        t.sleep(1)
+        if aguarde():
+            pa.click(545, 209, duration=0.3)
+            t.sleep(1)
+            clickonimg('mundonatcnpj.png')
+            t.sleep(1)
+            insertdate()
+            if searchdownload():
+                #t.sleep(1)
+                pa.click(1341, 14, duration=0.3)
+                t.sleep(1)
+                if locationimg('continuarbaixando.png'):
+                    if aguardeimg('baixado.png', 30):
+                        clickonimg('continuarbaixando.png')
+                        pa.click(1341, 14, duration=0.5)
+                        return 1
+                    else:
+                        print('falha no download!!')
+                        t.sleep(1)
+                        pa.click(1341, 14, duration=0.3)
+                        return 0
+                else:
+                    return 1
+            else:
+                print('Problema no Download!')
+                return 0
+        else:
+            print('Problema no site!')
+            return 0
+    else:
+        return 0
 
 
 def downloadxmlflavia():
