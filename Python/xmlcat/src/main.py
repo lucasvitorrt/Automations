@@ -3,12 +3,17 @@ import copia as c
 import time as t
 
 if f.downloadxmlmundnat():
-    print('Mundo Natural baixado com sucesso!')
+    print('XML Mundo Natural baixado com sucesso!')
 else:
-    print('Erro ao baixar o download do Mundo Natural')
+    print('Erro ao baixar o XML do Mundo Natural')
 
-
-'''t.sleep(1)
-f.downloadxmlflavia()
 t.sleep(1)
-c.copyfiles()'''
+
+if f.downloadxmlflavia():
+    print('XML Flavia baixado com sucesso!')
+else:
+    print('Erro ao baixar o XML da Flavia')
+
+t.sleep(1)
+
+c.copyfiles()

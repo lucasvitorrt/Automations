@@ -20,7 +20,6 @@ def show_popup(message):
     button.pack()
     root.mainloop()
 
-
 def aguardeimg(img : str, time : int): # espera uma imagem(img) na tela por x(time) tentaivas de 1 seg, caso apareça retorna 1.
     t.sleep(1)
     while locationimg(img) != 1:
@@ -30,18 +29,6 @@ def aguardeimg(img : str, time : int): # espera uma imagem(img) na tela por x(ti
             return 0
     else:
         return 1
-
-
-'''def aguardeedge():
-    time = 0
-    t.sleep(1)
-    while locationimg('edgeaberto.png') != 1:
-        t.sleep(5)
-        time += 1
-        if time == '2':
-            return 0
-    else:
-        return 1'''
 
 def opensite(site, path): #função para abrir o site de download.
     os.startfile(path)
@@ -67,7 +54,8 @@ def opensite(site, path): #função para abrir o site de download.
 def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     local = pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
     x, y = pa.center(local)
-    pa.click(x, y, duration=0.3)
+    pa.click(x, y, duration=0.2)
+
 
 def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
     try:
@@ -95,33 +83,22 @@ def verifycertificate(certificate : str): #função que verifica se há um certi
                         pa.click()
                     ex = 0
             else:
-                t.sleep(0.2)
+                t.sleep(0.1)
                 pa.press('ENTER')
                 break
     else:
         print('Não foi possivel abrir a janela de seleção de certificado!')   
    
-def aguarde():
+def aguarde(): #verifica se a imagem do arguarde ainda está na tela
     time = 0
     t.sleep(1.5)
     while locationimg('aguarde.png'):
-        t.sleep(5)
+        t.sleep(1)
         time += 1
-        if time == '2':
+        if time == 20:
             return 0
     else:
         return 1
-
-'''def aguardeconclusao():
-    time = 0
-    t.sleep(1.5)
-    while locationimg('concluido.png') != 1:
-        t.sleep(3)
-        time += 1
-        if time == '20':
-            return 0
-    else:
-        return 1'''
 
 def searchdownload(): #função de busca dos xml e downloads
     clickonimg('pesquisar.png')
@@ -144,7 +121,6 @@ def searchdownload(): #função de busca dos xml e downloads
     else:
         print('Aguardou tempo demais!')
         return 0
-
 
 def insertdate(): #função para inserção de data no seu respectivo campo.
     pa.click(256, 256, duration=0.3)
@@ -183,6 +159,51 @@ def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
                 else:
                     return 1
             else:
+                print('Problema no Download Mundo Natural!')
+                return 0
+        else:
+            print('Problema no site!')
+            return 0
+    else:
+        return 0
+
+def downloadxmlflavia(): 
+    if opensite(ende, local):
+        verifycertificate('flavia.png')
+        t.sleep(1)
+        if aguarde():
+            t.sleep(1)
+            insertdate()
+            if searchdownload():
+                t.sleep(1)
+                clickonimg('novaconsulta.png') # estou aqui
+                if aguarde():
+                    pa.click(545, 209, duration=0.3)
+                    t.sleep(1)
+                    clickonimg('flaviacnpj.png')
+                    t.sleep(1)
+                    insertdate()
+                    if searchdownload():
+                        pa.click(1341, 14, duration=0.3)
+                        t.sleep(1)
+                        if locationimg('continuarbaixando.png'):
+                            if aguardeimg('baixado.png', 30):
+                                clickonimg('continuarbaixando.png')
+                                pa.click(1341, 14, duration=0.5)
+                                return 1
+                            else:
+                                print('falha no download!!')
+                                t.sleep(1)
+                                pa.click(1341, 14, duration=0.3)
+                                return 0
+                        else:
+                            return 1
+                    else: 
+                        print('Problema no download Flavia!')
+                else:
+                    print('Problema na nova consulta da Flavia.')
+                    return 0
+            else:
                 print('Problema no Download!')
                 return 0
         else:
@@ -191,21 +212,3 @@ def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
     else:
         return 0
 
-
-def downloadxmlflavia():
-    opensite(ende, local)
-    verifycertificate('flavia.png')
-    t.sleep(1)
-    insertdate()
-    searchdownload()
-    t.sleep(1)
-    clickonimg('novaconsulta.png')
-    t.sleep(4)
-    pa.click(545, 209, duration=0.3)
-    t.sleep(1)
-    clickonimg('flaviacnpj.png')
-    t.sleep(1)
-    insertdate()
-    searchdownload()
-    t.sleep(2)
-    pa.click(1341, 14, duration=0.3)
