@@ -129,21 +129,4 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
         )
     )
 
-
 ft.app(target=main) # Executa a aplicação
-
-'''if f.downloadxmlmundnat():
-    print('XML Mundo Natural baixado com sucesso!')
-else:
-    print('Erro ao baixar o XML do Mundo Natural')
-
-time.sleep(1)
-
-if f.downloadxmlflavia():
-    print('XML Flavia baixado com sucesso!')
-else:
-    print('Erro ao baixar o XML da Flavia')
-
-time.sleep(1)
-
-c.copyfiles()'''
