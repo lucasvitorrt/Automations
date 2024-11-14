@@ -7,9 +7,8 @@ import datetime as dt
 local = r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' #Local do navegador(baseado no edge)
 ende = r'http://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal' #site de dowload dos xmls
 
-daysago = 1 #quantidade de dias atrás para pesquisa
 today = dt.date.today().strftime('%d/%m/%Y')
-day = (dt.date.today() - dt.timedelta(days=daysago)).strftime('%d/%m/%Y')
+
 
 def show_popup(message):
     root = tk.Tk()
@@ -103,6 +102,7 @@ def aguarde(): #verifica se a imagem do arguarde ainda está na tela
 def searchdownload(): #função de busca dos xml e downloads
     clickonimg('pesquisar.png')
     if aguarde():
+        t.sleep(1)
         pa.click()
         if aguarde():
             #t.sleep(2)
@@ -122,7 +122,8 @@ def searchdownload(): #função de busca dos xml e downloads
         print('Aguardou tempo demais!')
         return 0
 
-def insertdate(): #função para inserção de data no seu respectivo campo.
+def insertdate(daysago): #função para inserção de data no seu respectivo campo.
+    day = (dt.date.today() - dt.timedelta(days=daysago)).strftime('%d/%m/%Y')
     pa.click(256, 256, duration=0.3)
     t.sleep(0.5)
     pa.write(day)
@@ -132,7 +133,7 @@ def insertdate(): #função para inserção de data no seu respectivo campo.
     pa.write(today)
     t.sleep(0.5)
 
-def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
+def downloadxmlmundnat(daysago): #função para dowload dos xmls de catalão.
     if opensite(ende, local):
         verifycertificate('mundonat.png')
         t.sleep(1)
@@ -141,7 +142,7 @@ def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
             t.sleep(1)
             clickonimg('mundonatcnpj.png')
             t.sleep(1)
-            insertdate()
+            insertdate(daysago)
             if searchdownload():
                 #t.sleep(1)
                 pa.click(1341, 14, duration=0.3)
@@ -167,13 +168,13 @@ def downloadxmlmundnat(): #função para dowload dos xmls de catalão.
     else:
         return 0
 
-def downloadxmlflavia(): 
+def downloadxmlflavia(daysago): 
     if opensite(ende, local):
         verifycertificate('flavia.png')
         t.sleep(1)
         if aguarde():
             t.sleep(1)
-            insertdate()
+            insertdate(daysago)
             if searchdownload():
                 t.sleep(1)
                 clickonimg('novaconsulta.png') # estou aqui
@@ -182,7 +183,7 @@ def downloadxmlflavia():
                     t.sleep(1)
                     clickonimg('flaviacnpj.png')
                     t.sleep(1)
-                    insertdate()
+                    insertdate(daysago)
                     if searchdownload():
                         pa.click(1341, 14, duration=0.3)
                         t.sleep(1)
