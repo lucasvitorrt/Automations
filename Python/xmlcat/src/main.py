@@ -4,16 +4,20 @@ import time
 import os
 import shutil
 
+ico = f.resource_path('baixaxml.ico')
 download = os.path.expanduser('~\Downloads') # caminho pasta dowload
 destino = 'C:/NFE/Importador - CATALAO/'  # caminho destino
 tempo_atual = time.time() 
 limite_tempo = tempo_atual - (1 * 60 * 60)  # apenas arquivos baixados na ultima hora
 
-
 def main(page: ft.Page): # Configurando a janela do aplicativo
     page.title = "Baixa XML"
+    page.window_resizable = False  # Impede redimensionamento
+    page.window_maximizable = False  # Impede maximização
     page.window_width = 310
     page.window_height = 390
+    page.window_center()
+    page.window.icon = ico
     
     def on_download_click(e):     # Função para o botão "Baixar"
         try:
@@ -23,7 +27,8 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
             page.update()
             progress_bar.value = 0  # Resetando a barra de progresso
             page.update()
-
+            #pushbutton para selecionar qual empresa eu quero baixar o xml
+            #pois se caso der erro em alguma, posso tentar novamente
             if f.downloadxmlmundnat(days):
                 ok_cat = 1
             else:
@@ -60,12 +65,12 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
                 output.value += "\nErro ao baixar o XML da Flavia"
             
             copyfiles()
+            output.value += "\nXML's BAIXADOS COM SUCESSO!"
             page.update()
         except ValueError:
             output.value = "Por favor, digite um número inteiro válido!"
             page.update()
     
-   
     def on_cancel_click(e):  # Função para o botão "Cancelar"
         # Limpa o campo de entrada, o campo de saída e a barra de progresso
         input_days.value = ""
@@ -73,11 +78,6 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
         progress_bar.value = 0
         page.update()
 
-    # Função personalizada para simular o print no output
-    def custom_print(message):
-        output.value += f"{message}\n"
-        page.update()
-    
     def copyfiles():
         for arquivo in os.listdir(download): 
             if arquivo.endswith('.zip'): 
@@ -88,7 +88,6 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
                     #print(f'Copiado: {arquivo}') # informação dos arquivos copiados.
                     output.value += (f'Copiado: {arquivo}')
     
-        
     app_title = ft.Text("Baixa XML", size=20, weight="bold") # Título do aplicativo
     
     # Campo para entrada de número de dias
@@ -129,4 +128,8 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
         )
     )
 
-ft.app(target=main) # Executa a aplicação
+try:
+    ft.app(target=main)
+except Exception as e:
+    with open("error_log.txt", "w") as log_file:
+        log_file.write(str(e))

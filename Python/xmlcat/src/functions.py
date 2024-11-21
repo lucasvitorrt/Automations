@@ -1,23 +1,18 @@
 import pyautogui as pa
-import tkinter as tk
-import os
 import time as t
 import datetime as dt
+import os
+import sys
+
+def resource_path(relative_path):
+    #Retorna o caminho absoluto para um recurso, independente se está em execução ou empacotado.
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
 
 local = r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' #Local do navegador(baseado no edge)
 ende = r'http://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal' #site de dowload dos xmls
 
 today = dt.date.today().strftime('%d/%m/%Y')
-
-
-def show_popup(message):
-    root = tk.Tk()
-    root.title("Aviso")
-    label = tk.Label(root, text=message, padx=20, pady=20)
-    label.pack()
-    button = tk.Button(root, text="OK", command=root.destroy, padx=10, pady=5)
-    button.pack()
-    root.mainloop()
 
 def aguardeimg(img : str, time : int): # espera uma imagem(img) na tela por x(time) tentaivas de 1 seg, caso apareça retorna 1.
     t.sleep(1)
@@ -50,15 +45,30 @@ def opensite(site, path): #função para abrir o site de download.
         print('Navegador não foi aberto corretamente!')
         return 0
 
-def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
-    local = pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
+#descomentar as funções abaixo para testar o app, a que está descomentada é usada para gerar o exe
+'''def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
+    local = pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
     x, y = pa.center(local)
     pa.click(x, y, duration=0.2)
 
 
+   def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
+    try:
+        pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
+    except:
+        return 0
+    return 1'''
+
+def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
+    img_path = resource_path(img)
+    local = pa.locateOnScreen(resource_path(img_path))
+    x, y = pa.center(local)
+    pa.click(x, y, duration=0.2)
+
 def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
     try:
-        pa.locateOnScreen('Automations\\python\\xmlcat\\imgs\\' + img)
+        img_path = resource_path(img)  # Caminho direto da imagem na pasta raiz (src)
+        pa.locateOnScreen(img_path)
     except:
         return 0
     return 1
@@ -99,25 +109,38 @@ def aguarde(): #verifica se a imagem do arguarde ainda está na tela
     else:
         return 1
 
+def aguarda_navegador():
+    time = 0
+    t.sleep(1.5)
+    while locationimg('aguardenavegador.png') != 1:
+        t.sleep(1)
+        time += 1
+        if time == 20:
+            return 0
+    else:
+        return 1
+
 def searchdownload(): #função de busca dos xml e downloads
     clickonimg('pesquisar.png')
     if aguarde():
         t.sleep(1)
-        pa.click()
-        if aguarde():
-            #t.sleep(2)
-            if locationimg('semresult.png'):
-                print('Não há xml para essa empresa.')    
-            else:
-                clickonimg('baixar2.png')
-                if aguardeimg('concluido.png', 120):
-                    return 1
+        if aguarda_navegador():
+            pa.click()
+            if aguarde():
+                if locationimg('semresult.png'):
+                    print('Não há xml para essa empresa.')    
                 else:
-                    return 0
-            #clickonimg('ok.png')
+                    clickonimg('baixar2.png')
+                    if aguardeimg('concluido.png', 120):
+                        return 1
+                    else:
+                        return 0
+            else:
+                print('Aguardou tempo demais!')
+                return 0    
         else:
-            print('Aguardou tempo demais!')
             return 0
+        
     else:
         print('Aguardou tempo demais!')
         return 0
@@ -144,7 +167,6 @@ def downloadxmlmundnat(daysago): #função para dowload dos xmls de catalão.
             t.sleep(1)
             insertdate(daysago)
             if searchdownload():
-                #t.sleep(1)
                 pa.click(1341, 14, duration=0.3)
                 t.sleep(1)
                 if locationimg('continuarbaixando.png'):
@@ -212,4 +234,3 @@ def downloadxmlflavia(daysago):
             return 0
     else:
         return 0
-
