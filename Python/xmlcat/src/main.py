@@ -8,7 +8,7 @@ ico = f.resource_path('baixaxml.ico')
 download = os.path.expanduser('~\Downloads') # caminho pasta dowload
 destino = 'C:/NFE/Importador - CATALAO/'  # caminho destino
 tempo_atual = time.time() 
-limite_tempo = tempo_atual - (1 * 60 * 60)  # apenas arquivos baixados na ultima hora
+limite_tempo = tempo_atual - (1 * 60 * 30)  # apenas arquivos baixados na ultima hora
 
 def main(page: ft.Page): # Configurando a janela do aplicativo
     page.title = "Baixa XML"
@@ -59,7 +59,8 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
                 output.value += "\nXML Mundo Natural baixado com sucesso!"
             elif err_cat:
                 output.value += "\nErro ao baixar o XML do Mundo Natural"
-            elif ok_flavia:
+
+            if ok_flavia:
                 output.value += "\nXML Flavia baixado com sucesso!"
             elif err_flavia:
                 output.value += "\nErro ao baixar o XML da Flavia"
