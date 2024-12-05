@@ -71,7 +71,7 @@ def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela
         pa.locateOnScreen(img_path)
     except:
         return 0
-    return 1#'''
+    return 1'''
 
 def verifycertificate(certificate : str): #função que verifica se há um certificado instalado.
     if aguardeimg('selecionarumcertificado.png', 10):
