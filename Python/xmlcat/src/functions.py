@@ -46,24 +46,50 @@ def opensite(site, path): #função para abrir o site de download.
         return 0
 
 #descomentar as funções abaixo para testar o app, a que está descomentada é usada para gerar o exe
-def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
+'''def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     local = pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
     x, y = pa.center(local)
     pa.click(x, y, duration=0.2)
 
-
+def clickonimgembaixo(img : str): #função para clicar em uma imagem.png que esteja na tela
+    local = pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
+    x = local.left + local.width // 2  # Coordenada X permanece no centro
+    y = local.top + local.height - 1   # Coordenada Y na parte inferior da imagem
+    pa.click(x, y, duration=0.2)    
+ 
+def clickonimgemdireta(img : str): #função para clicar em uma imagem.png que esteja na tela
+    local = pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
+    x = local.left + local.width - 5  # Move para o canto direito da imagem
+    y = local.top + local.height // 2  # Mantém o Y no meio vertical da imagem
+    pa.click(x, y, duration=0.2) 
+    
 def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
     try:
         pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
     except:
         return 0
     return 1
+    '''
 
-'''def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
+def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     img_path = resource_path(img)
     local = pa.locateOnScreen(resource_path(img_path))
     x, y = pa.center(local)
     pa.click(x, y, duration=0.2)
+    
+def clickonimgembaixo(img : str): #função para clicar na parte de baixo em uma imagem.png que esteja na tela
+    img_path = resource_path(img)
+    local = pa.locateOnScreen(resource_path(img_path))
+    x = local.left + local.width // 2  # Coordenada X permanece no centro
+    y = local.top + local.height - 1   # Coordenada Y na parte inferior da imagem
+    pa.click(x, y, duration=0.2)    
+ 
+def clickonimgemdireta(img : str): #função para clicar na parte direira em uma imagem.png que esteja na tela
+    img_path = resource_path(img)
+    local = pa.locateOnScreen(resource_path(img_path))
+    x = local.left + local.width - 5  # Move para o canto direito da imagem
+    y = local.top + local.height // 2  # Mantém o Y no meio vertical da imagem
+    pa.click(x, y, duration=0.2) 
 
 def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela, 0 caso não.
     try:
@@ -71,7 +97,7 @@ def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela
         pa.locateOnScreen(img_path)
     except:
         return 0
-    return 1'''
+    return 1
 
 def verifycertificate(certificate : str): #função que verifica se há um certificado instalado.
     if aguardeimg('selecionarumcertificado.png', 10):
@@ -125,7 +151,7 @@ def searchdownload(): #função de busca dos xml e downloads
     if aguarde():
         t.sleep(1)
         if aguarda_navegador():
-            pa.click()
+            clickonimg('baixar.png')
             if aguarde():
                 if locationimg('semresult.png'):
                     print('Não há xml para essa empresa.')    
@@ -147,7 +173,7 @@ def searchdownload(): #função de busca dos xml e downloads
 
 def insertdate(daysago): #função para inserção de data no seu respectivo campo.
     day = (dt.date.today() - dt.timedelta(days=daysago)).strftime('%d/%m/%Y')
-    pa.click(256, 256, duration=0.3)
+    clickonimgembaixo('periodo.png')
     t.sleep(0.5)
     pa.write(day)
     t.sleep(0.5)
@@ -167,17 +193,20 @@ def downloadxmlmundnat(daysago): #função para dowload dos xmls de catalão.
             t.sleep(1)
             insertdate(daysago)
             if searchdownload():
-                pa.click(1341, 14, duration=0.3)
+                #pa.click(1341, 14, duration=0.3)
+                clickonimgemdireta('fecharjanela.png')
                 t.sleep(1)
                 if locationimg('continuarbaixando.png'):
                     if aguardeimg('baixado.png', 30):
                         clickonimg('continuarbaixando.png')
-                        pa.click(1341, 14, duration=0.5)
+                        #pa.click(1341, 14, duration=0.5)
+                        clickonimgemdireta('fecharjanela.png')
                         return 1
                     else:
                         print('falha no download!!')
                         t.sleep(1)
-                        pa.click(1341, 14, duration=0.3)
+                        #pa.click(1341, 14, duration=0.3)
+                        clickonimgemdireta('fecharjanela.png')
                         return 0
                 else:
                     return 1
@@ -207,18 +236,21 @@ def downloadxmlflavia(daysago):
                     t.sleep(1)
                     insertdate(daysago)
                     if searchdownload():
-                        pa.click(1341, 14, duration=0.3)
+                        #pa.click(1341, 14, duration=0.3)
+                        clickonimgemdireta('fecharjanela.png')
                         t.sleep(1)
                         if locationimg('continuarbaixando.png'):
                             if aguardeimg('baixado.png', 30):
                                 clickonimg('continuarbaixando.png')
                                 t.sleep(1.5)
-                                pa.click(1341, 14, duration=0.5)
+                                #pa.click(1341, 14, duration=0.5)
+                                clickonimgemdireta('fecharjanela.png')
                                 return 1
                             else:
                                 print('falha no download!!')
                                 t.sleep(1.5)
-                                pa.click(1341, 14, duration=0.3)
+                                #pa.click(1341, 14, duration=0.3)
+                                clickonimgemdireta('fecharjanela.png')
                                 return 0
                         else:
                             return 1

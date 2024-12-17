@@ -42,6 +42,7 @@ def main(page: ft.Page): # Configurando a janela do aplicativo
 
             if f.downloadxmlflavia(days):
                 ok_flavia = 1
+                
             else:
                 err_flavia = 1
 
