@@ -68,8 +68,8 @@ def locationimg(img : str): #função que retorna 1 caso haja uma imagem na tela
         pa.locateOnScreen(resource_path('Automations\\python\\xmlcat\\imgs\\' + img))
     except:
         return 0
-    return 1
-    '''
+    return 1'''
+    
 
 def clickonimg(img : str): #função para clicar em uma imagem.png que esteja na tela
     img_path = resource_path(img)
@@ -137,8 +137,7 @@ def aguarde(): #verifica se a imagem do arguarde ainda está na tela
 
 def aguarda_navegador():
     time = 0
-    t.sleep(1.5)
-    while locationimg('aguardenavegador.png') != 1:
+    while locationimg('aguardenavegador2.png') != 1:
         t.sleep(1)
         time += 1
         if time == 20:
@@ -193,25 +192,23 @@ def downloadxmlmundnat(daysago): #função para dowload dos xmls de catalão.
             t.sleep(1)
             insertdate(daysago)
             if searchdownload():
-                #pa.click(1341, 14, duration=0.3)
                 clickonimgemdireta('fecharjanela.png')
                 t.sleep(1)
                 if locationimg('continuarbaixando.png'):
                     if aguardeimg('baixado.png', 30):
                         clickonimg('continuarbaixando.png')
-                        #pa.click(1341, 14, duration=0.5)
                         clickonimgemdireta('fecharjanela.png')
                         return 1
                     else:
                         print('falha no download!!')
                         t.sleep(1)
-                        #pa.click(1341, 14, duration=0.3)
                         clickonimgemdireta('fecharjanela.png')
                         return 0
                 else:
                     return 1
             else:
                 print('Problema no Download Mundo Natural!')
+                clickonimgemdireta('fecharjanela.png')
                 return 0
         else:
             print('Problema no site!')
@@ -228,7 +225,7 @@ def downloadxmlflavia(daysago):
             insertdate(daysago)
             if searchdownload():
                 t.sleep(1)
-                clickonimg('novaconsulta.png') # estou aqui
+                clickonimg('novaconsulta.png')
                 if aguarde():
                     pa.click(545, 209, duration=0.3)
                     t.sleep(1)
@@ -236,26 +233,24 @@ def downloadxmlflavia(daysago):
                     t.sleep(1)
                     insertdate(daysago)
                     if searchdownload():
-                        #pa.click(1341, 14, duration=0.3)
                         clickonimgemdireta('fecharjanela.png')
                         t.sleep(1)
                         if locationimg('continuarbaixando.png'):
                             if aguardeimg('baixado.png', 30):
                                 clickonimg('continuarbaixando.png')
                                 t.sleep(1.5)
-                                #pa.click(1341, 14, duration=0.5)
                                 clickonimgemdireta('fecharjanela.png')
                                 return 1
                             else:
                                 print('falha no download!!')
                                 t.sleep(1.5)
-                                #pa.click(1341, 14, duration=0.3)
                                 clickonimgemdireta('fecharjanela.png')
                                 return 0
                         else:
                             return 1
                     else: 
                         print('Problema no download Flavia!')
+                        clickonimgemdireta('fecharjanela.png')
                 else:
                     print('Problema na nova consulta da Flavia.')
                     return 0
