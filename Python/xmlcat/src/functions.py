@@ -137,7 +137,7 @@ def aguarde(): #verifica se a imagem do arguarde ainda está na tela
 
 def aguarda_navegador():
     time = 0
-    while locationimg('aguardenavegador2.png') != 1:
+    while locationimg('aguardenavegador.png') != 1:
         t.sleep(1)
         time += 1
         if time == 20:
